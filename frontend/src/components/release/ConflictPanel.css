@@ -1,0 +1,10 @@
+.conflict-list{display:grid;gap:12px}
+.conflict-card{display:flex;justify-content:space-between;gap:18px;border:1px solid #e7d3c4;background:#fdf8f3;border-radius:9px;padding:14px 16px}
+.conflict-card.cleared{background:#f1f6ef;border-color:#c4d8c3}
+.conflict-title{display:flex;align-items:center;gap:9px;flex-wrap:wrap;margin-bottom:6px}
+.conflict-detail{margin:0 0 8px;color:#92401f;font-weight:700;font-size:14px}
+.cleared .conflict-detail{color:#3d6b53}
+.conflict-meta{display:flex;gap:18px;flex-wrap:wrap}
+.conflict-side{display:grid;gap:10px;align-content:center;justify-items:end;flex:none}
+.choices-preview{display:grid;gap:4px;justify-items:end}
+.cleared-note{margin:8px 0 0;color:#3d6b53;font-size:13px;font-weight:700}

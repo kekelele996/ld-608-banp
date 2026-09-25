@@ -1,5 +1,9 @@
 export const routes = [
   {
+    "name": "过站放行",
+    "route": "/release"
+  },
+  {
     "name": "过站运行看板",
     "route": "/dashboard"
   },

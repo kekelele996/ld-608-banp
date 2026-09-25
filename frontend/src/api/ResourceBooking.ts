@@ -1,21 +1,23 @@
-import { mockData } from "../mocks/seedData";
-import type { ResourceBooking } from "../types/ResourceBooking";
+import { request } from "./client";
+import type { RebookCandidate, RebookResult, BookingHistoryItem } from "../types/ResourceBooking";
 
-const endpoint = "/api/resource-booking";
-
-export async function listResourceBooking(): Promise<ResourceBooking[]> {
-  if (typeof fetch !== "undefined" && endpoint.startsWith("/api") && true) {
-    try {
-      const res = await fetch(endpoint);
-      if (res.ok) return await res.json();
-    } catch {
-      // Local mock fallback keeps the UI available during offline review.
-    }
-  }
-  return [...(mockData.resourceBooking as unknown as ResourceBooking[])];
+// rebookBooking swaps a conflicting booking onto another usable resource.
+// The backend flips the old booking to RELEASED and creates a linked new one
+// inside one transaction.
+export function rebookBooking(
+  bookingId: number,
+  payload: { new_resource_id: number; new_start_time?: string; new_end_time?: string }
+): Promise<RebookResult> {
+  return request<RebookResult>(`/api/bookings/${bookingId}/rebook`, {
+    method: "POST",
+    body: JSON.stringify({ actor: "dispatcher", ...payload })
+  });
 }
 
-export async function saveResourceBooking(payload: ResourceBooking) {
-  console.info("save ResourceBooking", payload);
-  return payload;
+export function listRebookCandidates(bookingId: number): Promise<RebookCandidate[]> {
+  return request<RebookCandidate[]>(`/api/bookings/${bookingId}/candidates`);
+}
+
+export function listBookingHistory(taskId: number): Promise<BookingHistoryItem[]> {
+  return request<BookingHistoryItem[]>(`/api/bookings/task/${taskId}/history`);
 }

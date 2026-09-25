@@ -1,21 +1,32 @@
-import { mockData } from "../mocks/seedData";
-import type { FlightTurnaround } from "../types/FlightTurnaround";
+import { request } from "./client";
+import type { FlightTurnaround, ReleaseCheckResult, ReleaseResponse } from "../types/FlightTurnaround";
 
-const endpoint = "/api/flight-turnaround";
+const endpoint = "/api/turnarounds";
 
-export async function listFlightTurnaround(): Promise<FlightTurnaround[]> {
-  if (typeof fetch !== "undefined" && endpoint.startsWith("/api") && true) {
-    try {
-      const res = await fetch(endpoint);
-      if (res.ok) return await res.json();
-    } catch {
-      // Local mock fallback keeps the UI available during offline review.
-    }
-  }
-  return [...(mockData.flightTurnaround as unknown as FlightTurnaround[])];
+export function listTurnarounds(): Promise<FlightTurnaround[]> {
+  return request<FlightTurnaround[]>(endpoint);
 }
 
-export async function saveFlightTurnaround(payload: FlightTurnaround) {
-  console.info("save FlightTurnaround", payload);
-  return payload;
+export function getTurnaround(id: number) {
+  return request<{
+    turnaround: FlightTurnaround;
+    tasks: import("../types/GroundTask").GroundTask[];
+    delays: import("../types/DelayEvent").DelayEvent[];
+    bookings: import("../types/ResourceBooking").BookingHistoryItem[];
+  }>(`${endpoint}/${id}`);
+}
+
+// getReleaseCheck aggregates unfinished tasks, open delays and booking
+// conflicts for the flight detail release panel (read-only).
+export function getReleaseCheck(id: number): Promise<ReleaseCheckResult> {
+  return request<ReleaseCheckResult>(`${endpoint}/${id}/release-check`);
+}
+
+// submitRelease re-verifies all three conditions server-side. On failure the
+// rejected ApiError carries violations naming the exact tasks/delays/bookings.
+export function submitRelease(id: number, actor = "dispatcher"): Promise<ReleaseResponse> {
+  return request<ReleaseResponse>(`${endpoint}/${id}/release`, {
+    method: "POST",
+    body: JSON.stringify({ actor })
+  });
 }

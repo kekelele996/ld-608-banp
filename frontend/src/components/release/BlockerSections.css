@@ -1,0 +1,8 @@
+.blocker-list{list-style:none;margin:0;padding:0;display:grid;gap:10px}
+.blocker-row{display:flex;justify-content:space-between;gap:14px;align-items:center;border:1px solid #e6e5da;border-radius:8px;padding:11px 13px;background:#fdfcf7}
+.blocker-main{display:grid;gap:5px;min-width:0}
+.blocker-title{display:flex;align-items:center;gap:8px;flex-wrap:wrap}
+.blocker-meta{display:flex;gap:14px;flex-wrap:wrap}
+.blocker-side{display:grid;gap:6px;justify-items:end;flex:none}
+.blocker-note{color:#9a5a1c;font-size:12px}
+.delay-minutes{background:#f7e6d8;color:#a04a18;border-radius:99px;padding:1px 9px;font-size:12px;font-weight:800}

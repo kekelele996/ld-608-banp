@@ -4,20 +4,20 @@ services:
     image: mysql:8.0
     container_name: ${COMPOSE_PROJECT_NAME:-ground-turn}-db
     environment:
-      MYSQL_DATABASE: ${DB_NAME:-app_db}
-      MYSQL_USER: ${DB_USER:-app_user}
-      MYSQL_PASSWORD: ${DB_PASSWORD:-app_password}
-      MYSQL_ROOT_PASSWORD: ${DB_PASSWORD:-app_password}
+      MYSQL_DATABASE: ${DB_NAME:-ground_turn}
+      MYSQL_USER: ${DB_USER:-ground}
+      MYSQL_PASSWORD: ${DB_PASSWORD:-ground}
+      MYSQL_ROOT_PASSWORD: ${DB_PASSWORD:-ground}
     ports:
       - "${DB_PORT:-33060}:3306"
     volumes:
       - db_data:/var/lib/mysql
       - ./database/init.sql:/docker-entrypoint-initdb.d/init.sql:ro
     healthcheck:
-      test: ["CMD", "mysqladmin", "ping", "-h", "localhost", "-u", "$$MYSQL_USER", "-p$$MYSQL_PASSWORD"]
+      test: ["CMD", "mysqladmin", "ping", "-h", "localhost", "-u", "root", "-p${DB_PASSWORD:-ground}"]
       interval: 10s
       timeout: 5s
-      retries: 10
+      retries: 12
   backend:
     build:
       context: ./backend
@@ -26,13 +26,13 @@ services:
     env_file:
       - .env
     environment:
-      PORT: 3000
+      SERVER_PORT: 3000
+      DB_DRIVER: mysql
       DB_HOST: db
       DB_PORT: 3306
-      DB_NAME: ${DB_NAME:-app_db}
-      DB_USER: ${DB_USER:-app_user}
-      DB_PASSWORD: ${DB_PASSWORD:-app_password}
-      JWT_SECRET: local-dev-secret
+      DB_NAME: ${DB_NAME:-ground_turn}
+      DB_USER: ${DB_USER:-ground}
+      DB_PASSWORD: ${DB_PASSWORD:-ground}
     ports:
       - "${BACKEND_PORT:-21108}:3000"
     depends_on:
@@ -42,7 +42,7 @@ services:
       test: ["CMD-SHELL", "wget -qO- http://localhost:3000/health || exit 1"]
       interval: 10s
       timeout: 5s
-      retries: 10
+      retries: 12
   frontend:
     build:
       context: ./frontend

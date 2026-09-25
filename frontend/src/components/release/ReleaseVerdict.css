@@ -1,0 +1,12 @@
+.verdict{border-radius:10px;padding:18px 22px;display:grid;gap:14px;border:1px solid}
+.verdict.pass{background:#e9f3ea;border-color:#9fc6a7}
+.verdict.block{background:#fcefe8;border-color:#e5b59c}
+.verdict-head{display:flex;gap:16px;align-items:center}
+.verdict-stamp{flex:none;font-size:22px;font-weight:900;letter-spacing:.05em;padding:8px 18px;border-radius:8px}
+.verdict.pass .verdict-stamp{background:#245c3d;color:#f4f8f1}
+.verdict.block .verdict-stamp{background:#b0462e;color:#fdf3ee}
+.verdict-summary{margin:0;color:#46504a;font-size:14px}
+.verdict-reject{background:#fff;border:1px solid #df9f89;border-radius:8px;padding:12px 16px}
+.verdict-reject ul{margin:8px 0 0;padding-left:18px;display:grid;gap:6px}
+.violation-kind{display:inline-block;min-width:34px;text-align:center;border-radius:6px;padding:0 7px;margin-right:8px;font-size:12px;font-weight:800;background:#f0d9cd;color:#8c3824}
+.verdict-actions{display:flex;align-items:center;gap:14px}

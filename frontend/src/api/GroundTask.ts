@@ -1,21 +1,14 @@
-import { mockData } from "../mocks/seedData";
+import { request } from "./client";
 import type { GroundTask } from "../types/GroundTask";
 
-const endpoint = "/api/ground-task";
-
-export async function listGroundTask(): Promise<GroundTask[]> {
-  if (typeof fetch !== "undefined" && endpoint.startsWith("/api") && true) {
-    try {
-      const res = await fetch(endpoint);
-      if (res.ok) return await res.json();
-    } catch {
-      // Local mock fallback keeps the UI available during offline review.
-    }
-  }
-  return [...(mockData.groundTask as unknown as GroundTask[])];
+export function listGroundTasks(turnaroundId?: number): Promise<GroundTask[]> {
+  const qs = turnaroundId ? `?turnaround_id=${turnaroundId}` : "";
+  return request<GroundTask[]>(`/api/ground-tasks${qs}`);
 }
 
-export async function saveGroundTask(payload: GroundTask) {
-  console.info("save GroundTask", payload);
-  return payload;
+export function updateTaskStatus(id: number, status: string, blockerNote = ""): Promise<GroundTask> {
+  return request<GroundTask>(`/api/ground-tasks/${id}/status`, {
+    method: "PATCH",
+    body: JSON.stringify({ status, blocker_note: blockerNote, actor: "dispatcher" })
+  });
 }

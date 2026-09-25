@@ -1,8 +1,25 @@
-import { useMemo, useState } from "react";
+import { useMemo } from "react";
+import type { ReleaseCheckResult } from "../types/FlightTurnaround";
 
-export function useTurnaroundProgress<T>(rows: T[] = []) {
-  const [page, setPage] = useState(1);
-  const pageSize = 8;
-  const pageRows = useMemo(() => rows.slice((page - 1) * pageSize, page * pageSize), [rows, page]);
-  return { page, setPage, pageSize, pageRows, total: rows.length };
+// useTurnaroundProgress derives completion percentage and blocker counters
+// from a release-check aggregation.
+export function useTurnaroundProgress(check: ReleaseCheckResult | null) {
+  return useMemo(() => {
+    const total = check?.summary.total_tasks ?? 0;
+    const completed = check?.summary.completed_tasks ?? 0;
+    const percent = total === 0 ? 0 : Math.round((completed / total) * 100);
+    const blockers =
+      (check?.unfinished_tasks.length ?? 0) +
+      (check?.open_delays.length ?? 0) +
+      (check?.summary.booking_conflicts ?? 0);
+    return {
+      total,
+      completed,
+      percent,
+      blockers,
+      unfinished: check?.unfinished_tasks.length ?? 0,
+      openDelays: check?.open_delays.length ?? 0,
+      conflicts: check?.summary.booking_conflicts ?? 0
+    };
+  }, [check]);
 }

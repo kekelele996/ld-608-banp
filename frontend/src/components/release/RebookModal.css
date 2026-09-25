@@ -1,0 +1,25 @@
+.modal-mask{position:fixed;inset:0;background:rgba(25,33,27,.45);display:flex;align-items:center;justify-content:center;z-index:40;padding:24px}
+.modal{background:#fbfaf4;border-radius:12px;width:min(720px,94vw);max-height:88vh;overflow:auto;box-shadow:0 24px 60px rgba(0,0,0,.25);display:grid;gap:14px;padding:22px 24px}
+.modal-head{display:flex;justify-content:space-between;align-items:center}
+.modal-head h3{margin:0;font-size:19px}
+.modal-x{font-size:24px;line-height:1;color:#7a8275;background:transparent;padding:2px 8px}
+.modal-x:hover{background:#eceadd;border-radius:6px}
+.modal-current{display:grid;grid-template-columns:repeat(3,1fr);gap:12px;background:#f1f2ea;border-radius:8px;padding:12px 14px}
+.modal-current>div{display:grid;gap:4px}
+.modal-current strong{font-size:15px}
+.modal-reason{margin:0;color:#92401f;font-weight:700;font-size:14px}
+.modal-section{margin:4px 0 0;font-size:14px;color:#46504a}
+.modal-empty{margin:0;color:#a04a1c;background:#f7e6d8;border-radius:8px;padding:10px 14px;font-size:13px}
+.candidate-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(150px,1fr));gap:10px}
+.candidate{display:grid;gap:5px;justify-items:start;text-align:left;border:1.5px solid #d9dacd;border-radius:9px;padding:12px;background:#fff;cursor:pointer;width:100%;box-sizing:border-box;color:#2b2f2a}
+.candidate:hover:not(.disabled){border-color:#8fa98c}
+.candidate.picked{border-color:#274335;background:#e9f1e8;box-shadow:inset 0 0 0 1px #274335}
+.candidate.disabled{opacity:.5;cursor:not-allowed;background:#f3f2ec}
+.candidate-reason{font-style:normal;font-size:11px;color:#9a5a1c}
+.modal-error{margin:0;color:#b03a2e;background:#fbe7e1;border-radius:8px;padding:9px 13px;font-size:13px}
+.history-list{list-style:none;margin:0;padding:0;display:grid;gap:8px;max-height:180px;overflow:auto}
+.history-list li{display:flex;align-items:center;gap:10px;flex-wrap:wrap;border:1px solid #e6e5da;border-radius:8px;padding:8px 12px;background:#fff;font-size:13px}
+.history-old{opacity:.85;background:#f6f3ee!important}
+.history-id{font-weight:800}
+.chain{font-style:normal;color:#245c3d;font-size:12px;font-weight:700;margin-left:auto}
+.modal-foot{display:flex;justify-content:flex-end;gap:10px;border-top:1px solid #e6e5da;padding-top:12px}

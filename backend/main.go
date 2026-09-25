@@ -1,3 +1,10 @@
 package main
-import "groundTurn/src/routes"
-func main(){ routes.Start(":3000") }
+
+import (
+	"groundTurn/src/config"
+	"groundTurn/src/routes"
+)
+
+func main() {
+	routes.Start(":" + config.ServerPort())
+}
