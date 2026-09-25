@@ -17,8 +17,20 @@ cp .env.example .env && docker compose up -d
 
 ## 本地开发方式
 
-- 前端：`cd frontend && npm install && npm run dev`
-- 后端：进入 `backend` 后按技术栈运行开发命令，接口统一挂在 `/api`。
+- 前端：`cd frontend && npm install && npm run dev`（开发服务器已把 `/api` 代理到本地后端）
+- 后端：`cd backend && go run main.go`（默认监听 `:3000`，可用 `PORT` 环境变量覆盖），接口统一挂在 `/api`。
+
+## 过站放行协同流程
+
+调度员在「过站放行」页（`/release`）逐项核对航班放行条件，避免放走条件不足的航班：
+
+1. **航班详情汇总**：`GET /api/flight-turnaround/:id/release-summary` 汇总未完成任务、未关闭延误、预约时间冲突三类条件，并给出放行结论（`RELEASABLE` / `BLOCKED`）与逐项阻碍说明。
+2. **提交放行复核**：`POST /api/flight-turnaround/:id/release` 由后端重新核对三类条件；任一不满足即返回 `409 RELEASE_CHECK_FAILED`，并在 `blockers` 中指出具体航班、任务或资源，航班状态与原预约保持不变；全部通过才把航班置为 `READY`。
+3. **资源换绑**：`GET /api/resource-booking/:id/rebind-options` 列出可换用的同类可用资源（`AVAILABLE` 且时段无冲突），`POST /api/resource-booking/:id/rebind` 完成换绑——原预约转为 `RELEASED` 并生成 `CONFIRMED` 新预约，两步在同一锁内原子完成；`GET /api/resource-booking?turnaround_id=` 返回含已释放在内的全部预约，历史记录可查前后两次预约。
+
+种子数据内置三种演示场景：航班 CA1234 同时命中三类阻碍；航班 MU5678 仅有预约冲突（换绑 BAG-02 → BAG-01 后即可放行）；航班 CZ9012 可直接放行。
+
+## 技术栈
 
 
 ## 技术栈
@@ -57,6 +69,9 @@ backend/src/routes, controllers, services, models, repositories, middlewares, co
 - GroundTaskType: constants/GroundTaskType、types/GroundTaskType、constructors、logTemplates、errorMessages、筛选器、展示组件/控制器均有引用。
 - TurnaroundStatus: constants/TurnaroundStatus、types/TurnaroundStatus、constructors、logTemplates、errorMessages、筛选器、展示组件/控制器均有引用。
 - ResourceStatus: constants/ResourceStatus、types/ResourceStatus、constructors、logTemplates、errorMessages、筛选器、展示组件/控制器均有引用。
+- BookingStatus（PENDING/CONFIRMED/RELEASED/CANCELLED）: 后端 `constants/BookingStatus.go`（含 `IsActiveBookingStatus`）、`services/ResourceBooking.go`（冲突检测与换绑）、`repositories/ResourceBooking.go`；前端 `constants/BookingStatus.ts`、`types/BookingStatus.ts`、`constants/statusText.ts`、`pages/ReleasePage.tsx`（预约历史）、`constructors/TurnaroundReleaseConstructor.ts`。
+- GroundTaskStatus（PENDING/IN_PROGRESS/BLOCKED/COMPLETED）: 后端 `constants/GroundTaskStatus.go`、`services/FlightTurnaround.go`（放行复核）、仓储种子；前端 `constants/GroundTaskStatus.ts`、`types/GroundTaskStatus.ts`、`pages/ReleasePage.tsx`（未完成任务列表）、`constructors/TurnaroundReleaseConstructor.ts`。
+- ReleaseConclusion（RELEASABLE/BLOCKED）: 后端 `constants/ReleaseConclusion.go`、`constructors/TurnaroundRelease.go`、`services/FlightTurnaround.go`；前端 `constants/ReleaseConclusion.ts`、`types/TurnaroundRelease.ts`、`pages/ReleasePage.tsx`（放行结论横幅）。
 
 ## 为什么会牵一发动全身
 

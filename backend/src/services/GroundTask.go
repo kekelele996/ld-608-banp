@@ -1,2 +1,13 @@
 package services
-// GroundTask keeps 地勤任务 changes coupled across layers.
+
+import (
+	"groundTurn/src/models"
+	"groundTurn/src/repositories"
+)
+
+// ListTasks 地勤任务列表。
+func ListTasks() []models.GroundTask {
+	repositories.Lock()
+	defer repositories.Unlock()
+	return repositories.ListTasks()
+}

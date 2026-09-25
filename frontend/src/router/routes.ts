@@ -8,6 +8,10 @@ export const routes = [
     "route": "/turnarounds"
   },
   {
+    "name": "过站放行",
+    "route": "/release"
+  },
+  {
     "name": "地勤任务",
     "route": "/tasks"
   },

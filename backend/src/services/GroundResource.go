@@ -1,2 +1,13 @@
 package services
-// GroundResource keeps 保障资源 changes coupled across layers.
+
+import (
+	"groundTurn/src/models"
+	"groundTurn/src/repositories"
+)
+
+// ListResources 保障资源列表。
+func ListResources() []models.GroundResource {
+	repositories.Lock()
+	defer repositories.Unlock()
+	return repositories.ListResources()
+}

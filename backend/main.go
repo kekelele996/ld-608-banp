@@ -1,3 +1,15 @@
 package main
-import "groundTurn/src/routes"
-func main(){ routes.Start(":3000") }
+
+import (
+	"os"
+
+	"groundTurn/src/routes"
+)
+
+func main() {
+	port := os.Getenv("PORT")
+	if port == "" {
+		port = "3000"
+	}
+	routes.Start(":" + port)
+}

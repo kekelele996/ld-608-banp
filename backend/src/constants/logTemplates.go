@@ -1,2 +1,10 @@
 package constants
-var LogTemplates = map[string][]string{}
+
+// LogTemplates 每个实体至少 4 条日志模板，所有写操作都要记录日志。
+var LogTemplates = map[string][]string{
+	"FlightTurnaround": {"航班过站创建", "航班过站更新", "航班过站状态变更", "航班过站导出", "过站放行通过", "过站放行被拒"},
+	"GroundTask":       {"地勤任务创建", "地勤任务更新", "地勤任务状态变更", "地勤任务导出"},
+	"GroundResource":   {"保障资源创建", "保障资源更新", "保障资源状态变更", "保障资源导出"},
+	"ResourceBooking":  {"资源预约创建", "资源预约更新", "资源预约状态变更", "资源预约导出", "资源换绑释放原预约", "资源换绑生成新预约"},
+	"DelayEvent":       {"延误事件创建", "延误事件更新", "延误事件状态变更", "延误事件导出"},
+}
